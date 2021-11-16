@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<style>
+input { 
+width: 25px; margin: 5px; height:25px;  
+}
+</style>
+
+</head>
+<body>
+
+<input class="inputs" type="text" maxlength="1" />
+<input class="inputs" type="text" maxlength="1" />
+<input class="inputs" type="text" maxlength="1" />
+<input class="inputs" type="text" maxlength="1" />
+<input class="inputs" type="text" maxlength="1" />
+<input class="inputs" type="text" maxlength="1" />
+<script>
+$(".inputs").keyup(function () {
+    if (this.value.length == this.maxLength) {
+      $(this).next('.inputs').focus();
+    }
+});
+
+
+let campos = document.querySelector('.inputs');
+campos.addEventListener('keyup',()=>{
+    if(this.value.length===this.maxLength){
+        this.next('.inputs').focus();
+    }
+})
+
+// document.querySelector(".inputs").keyup(function () {
+//     if (this.value.length == this.maxLength) {
+//       document.querySelector(this).next('.inputs').focus();
+//     }
+// });
+
+/*
+
+var container = document.getElementsByClassName("container")[0];
+    container.onkeyup = function(e) {
+    var target = e.srcElement || e.target;
+    var maxLength = parseInt(target.attributes["maxlength"].value, 10);
+    var myLength = target.value.length;
+    if (myLength >= maxLength) {
+        var next = target;
+        while (next = next.nextElementSibling) {
+            if (next == null)
+                break;
+            if (next.tagName.toLowerCase() === "input") {
+                next.focus();
+                break;
+            }
+        }
+    }
+    // Move to previous field if empty (user pressed backspace)
+    else if (myLength === 0) {
+         var previous = target;
+       // Move to previous field if backspace is pressed
+        if (code == 8) {
+            previous = previous.previousElementSibling;
+            if (previous != null) {
+                if (previous.tagName.toLowerCase() === "input") {
+                    previous.focus();
+                }
+            }
+        } else {
+            while (previous = previous.previousElementSibling) {
+                if (previous == null)
+                    break;
+                if (previous.tagName.toLowerCase() === "input") {
+                    var mLength = parseInt(previous.attributes["maxlength"].value, 10);
+                    var pMyLength = previous.value.length;
+                    // Move to previous field if it does not have required length
+                    if (mLength == pMyLength) {
+                        break;
+                    } else {
+                        previous.focus();
+                        break;
+                    }
+                }
+            }
+        }
+    }
+}
+
+*/
+</script>
+</body>
+</html>
