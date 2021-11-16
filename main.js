@@ -6,16 +6,26 @@ let context = canvas.getContext('2d');
 
 let box= 32;
 let snake = []; //parts of the snake
+
+// HEAD SIZE
 snake[0]={
     x: 8 * box,
     y: 8 * box,
 }
-let counter = 1;
 
+
+// DIRECTIONS
 const left  =   37;
 const up    =   38;
 const right =   39;
 const down  =   40;
+
+
+food={
+    x: Math.floor(Math.random() * 15+1) * box,
+    y: Math.floor(Math.random() * 15+1) * box,
+    
+}
 
 
 let direction = 'right';
@@ -55,36 +65,80 @@ function update(e){
 }
 
 
+function drawFood(){
+    context.fillStyle='red';
+    context.fillRect(food.x, food.y, box, box);
+}
+
+function warp(){
+if(snake[0].x > 15 * box && direction == 'right') snake[0].x=0;
+    if(snake[0].x< 0 && direction == 'left') snake[0].x = box* 16;
+    if(snake[0].y< 0 && direction == 'up') snake[0].y = box* 16;
+    if(snake[0].y> box * 16 && direction == 'down') snake[0].y = 0;
+}
+
+
+function GameOver(){
+    clearInterval(GameLoop);
+}
+
+function biteItself(){
+    for(let i=1; i< snake.length;i++){
+        if(snake[0].x == snake[i].x && snake[0].y == snake[i].y){
+            GameOver();
+            alert("Game Over")
+        }
+    }
+}
+
+
+
 //game loop
 function GameLoop(){
-   
-// LOGIC
-if(snake[0].x > (15 * box) && direction == 'right') snake[0].x=0;
-if(snake[0].x< 0 && direction == 'left') snake[0].x = box* 16;
-if(snake[0].y< 0 && direction == 'up') snake[0].y = box* 16;
-if(snake[0].y> box * 16 && direction == 'down') snake[0].y = 0;
+    
+    warp(); // LOGIC to warp (appear on the other side)
 
+    biteItself(); ///head touches any body part
+    
     createBG();
     createSnake();
-    
+    drawFood();
+
     let snakeX = snake[0].x;
     let snakeY = snake[0].y;
+
+// if snake  doesn't touch the fruit, remove its tail to redraw later
+ if(snakeX != food.x || snakeY != food.y){
+     snake.pop(); // take out a tail
+    }else{
+        //if it touches the fruit, dont remove the tail to seem like it gained a new piece of tail
+        food.x= Math.floor(Math.random() * 15+1) * box;
+        food.y= Math.floor(Math.random() * 15+1) * box;
+
+        
+    }
+    
+  
+    
     
     if(direction =='right') snakeX += box;
     if(direction == 'left') snakeX -= box;
     if(direction == 'up') snakeY -= box;
     if(direction == 'down') snakeY += box;
-
-    snake.pop(); // take out a tail
-
+    
+    
     //put a ne head
     let newHead = {
         x:snakeX,
         y: snakeY
     }
-
+    
     snake.unshift(newHead)
-
+    
+    
+    
+   
+    
 }
 
 
