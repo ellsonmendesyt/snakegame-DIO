@@ -3,10 +3,13 @@ const log= console.log;
 let canvas = document.querySelector('#snake');
 
 let context = canvas.getContext('2d');
+
+// AUDIOS 
+
 let invencibleTime= 3000; //3 seconds
 let box= 32;
 let snake = []; //parts of the snake
-let speed = 300;  // quanto menor, mais rapido, mais fificil
+let speed = 200;  // quanto menor, mais rapido, mais fificil
 // HEAD SIZE
 snake[0]={
     x: 8 * box,
@@ -32,6 +35,10 @@ const down  =   40;
 
 let direction = 'right';
 
+let alive=true;
+
+
+
 food={
     x: Math.floor(Math.random() * 15+1) * box,
     y: Math.floor(Math.random() * 15+1) * box,
@@ -39,7 +46,17 @@ food={
 }
 
 
-document.addEventListener('keydown', update);
+
+
+function playAudio(){
+    setTimeout(() => {
+        document.getElementById('die').play();
+      }, 500)
+}
+
+
+
+document.addEventListener('keydown', turn);
 
 function createBG(){
     context.fillStyle='lightgreen';
@@ -59,7 +76,7 @@ function createSnake(){
 
 
 ///se a direção anteriro nao for a contraria
-function update(e){
+function turn(e){
   if(e.keyCode == left && direction != 'right'){
        direction='left' ;
   }
@@ -108,8 +125,10 @@ function hitWalls(){
         if(hearts >0){
             takeDamage();
             getInvencible();
+            document.getElementById('die').play();
 
         }else{
+            document.getElementById('die').play();
             clearInterval(game)
             log('fim')
             GameOver();
@@ -129,6 +148,7 @@ function spawnSnake(){
 function GameOver(){
   
     clearInterval(game);
+    alive=false;
     
 }
 
@@ -136,6 +156,7 @@ function biteItself(){
     for(let i=1; i< snake.length;i++){
         if((snake[0].x == snake[i].x && snake[0].y == snake[i].y) && !invencible){
              takeDamage();
+            
            log(snake.length)
         }
     }
@@ -144,6 +165,8 @@ function biteItself(){
 // every time we take a damage we get incencible for 3 secs
 function takeDamage(){
     snake.pop(); // take out a tail
+    document.getElementById('hurt').play();
+    
 }
 
 function changeDirection(){
@@ -161,11 +184,14 @@ function spawnFood(){
 
 
 function eatFood(){
-    return snakeX != food.x || snakeY != food.y
+   
+    return snakeX != food.x || snakeY != food.y;
 }
 
 //game loop
 function GameLoop(){
+    
+
     
     hearts =snake.length-1;
     ///store snake current position
@@ -185,10 +211,11 @@ function GameLoop(){
 
  if(eatFood()){
     snake.pop(); 
-     
-    }else{
-        //if it touches the fruit, dont remove the tail to seem like it gained a new piece of tail
-        spawnFood();
+    
+}else{
+    //if it touches the fruit, dont remove the tail to seem like it gained a new piece of tail
+    spawnFood();
+    document.getElementById('item').play();
 
         
     }
@@ -197,8 +224,9 @@ function GameLoop(){
     
     
     //put a ne head
-  
-    spawnSnake();
+    if(alive){
+        spawnSnake();
+    }
     
     
     snake.unshift(newHead)
